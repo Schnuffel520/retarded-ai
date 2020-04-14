@@ -17,6 +17,7 @@ export default {
   methods: {
     initChart() {
       this.chart = new ColorCircle(this.$refs.webgl);
+      this.chart.componentWillMount();
     },
   },
 };

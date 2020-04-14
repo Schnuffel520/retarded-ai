@@ -1,25 +1,40 @@
 /**
- * 计算各组点的数据
- * @param {Number} num 扇叶数目
- * @param {Number} r 内半径
- * @param {Number} R 外半径
- * @returns {Object} 顶点和索引
+ * webgl-context的上下文属性
+ * @param {Object} config 用户设置的属性集合
+ * @returns {Object} 组合后的上下文属性
+ * @author schnuffel
+ * @version 0.1.0
  */
-export function createVertexByGroupPoint(num, r, R) {
-  const point = [];
-  const index = [];
-  const factor = 2 * Math.PI / num;
-  for (let i = 0; i < num; i++) {
-    point.push(R * Math.cos((i + 1) * factor), R * Math.sin((i + 1) * factor), 0, R * Math.cos((i) * factor), R * Math.sin((i) * factor), 0, r * Math.cos((i) * factor), r * Math.sin((i) * factor), 0, r * Math.cos((i + 1) * factor), r * Math.sin((i + 1) * factor), 0);
-    index.push(i * 4 + 0);
-    index.push(i * 4 + 1);
-    index.push(i * 4 + 2);
-    index.push(i * 4 + 0);
-    index.push(i * 4 + 2);
-    index.push(i * 4 + 3);
-  }
+export function loadWebGLConfig(config) {
+  const {
+    // [boolean]-canvas是否包含一个alpha缓冲区
+    alpha = true,
+    // [boolean]-是否开启抗锯齿
+    antialias = true,
+    // [boolean]-绘制缓冲区是否包含一个深度至少为16位的缓冲区
+    depth = true,
+    // [boolean]-在一个系统性能低的环境是否创建该上下文
+    failIfMajorPerformanceCaveat = false,
+    // [string]-浏览器在运行WebGL上下文时使用相应的GPU电源配置：
+    // default 自动选择，默认值
+    // high-performance 高性能模式
+    // low-power 节能模式
+    powerPreference = 'default',
+    // [boolean]-排版引擎假设绘制缓冲区是否包含预混合alpha通道
+    premultipliedAlpha = true,
+    // [boolean]-如果这个值为true缓冲区将不会被清除，会保存下来，直到被清除或被使用者覆盖
+    preserveDrawingBuffer = false,
+    // [boolean]-绘制缓冲区是否包含一个深度至少为8位的模版缓冲区
+    stencil = false,
+  } = config || {};
   return {
-    vertex: point,
-    index: index,
+    alpha,
+    antialias,
+    depth,
+    failIfMajorPerformanceCaveat,
+    powerPreference,
+    premultipliedAlpha,
+    preserveDrawingBuffer,
+    stencil,
   };
 }

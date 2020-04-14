@@ -1,45 +1,67 @@
 import { initShaders } from '../lib/cuon-utils';
-import { createVertexByGroupPoint } from '../lib/cuon-func';
-import { hslToRgba } from '../lib/shader-func';
+import WebGL from '../lib/webgl';
+// import { loadWebGLConfig } from '../lib/cuon-func';
 import { Matrix4 } from '../lib/cuon-matrix';
+import { VSHADER_SOURCE, FSHADER_SOURCE } from './shader';
+import { createVertexByGroupPoint } from './mode';
 
-export default class ColorCircle {
-  // 初始化结构
+export default class ColorCircle extends WebGL {
+  /**
+   * 初始化彩环
+   * @param {Document} dom 彩环挂载的dom节点
+   * @param {Object} config webgl-context的渲染配置
+   */
   constructor(dom, config) {
-    const {
-      fan = 360,
-      internalRadius = 0.5,
-      outerRadius = 0.9,
-      margin = 0,
-      interval = 0,
-      devicePixelRatio = window.devicePixelRatio || 2,
-    } = config || {};
-    // 视窗大小
+    super(dom, config);
+    this.option = {};
+    // webgl视窗大小
     this.viewWidth = undefined;
     this.viewHeight = undefined;
-    // 绘图工具&对象
+    // canvas节点
     this.canvas = undefined;
+    // webgl上下文
     this.gl = undefined;
+    // webgl挂载的dom节点
     this.dom = undefined;
+    // 计算生成的模型顶点索引数目
     this.n = 0;
-    this.fan = fan;
-    this.internalRadius = internalRadius;
-    this.outerRadius = outerRadius;
-    this.margin = margin;
-    this.interval = interval;
-    this.devicePixelRatio = devicePixelRatio;
+    // 扇叶数目
+    this.fan = 200;
+    // 内半径
+    this.internalRadius = 0.5;
+    // 外半径
+    this.outerRadius = 0.9;
+    // 编组之间的距离
+    this.margin = 0;
+    // 多少扇叶为一组
+    this.interval = 0;
+    // 设备绘制像素比
+    this.devicePixelRatio = 2;
+    // mvp矩阵变量存储空间
     this.uMvpMatrix = undefined;
+    // mvp矩阵
     this.mvpMatrix = undefined;
+    // 视图矩阵
     this.viewProjMatrix = undefined;
+    // 模型矩阵
     this.modelMatrix = undefined;
-    // 变量区域
+    // 对象加载状态
     this.loading = true;
+    // 绘制请求帧
     this.frameRequest = undefined;
+    // 当前绘制索引值
     this.current = 0;
+    // 上一次绘制的时间
     this.last = Date.now();
+    // 绘制速度
     this.speed = 20;
     this.create(dom);
+    // this.componentWillMount = this.componentWillMount.bind(this);
   }
+
+  // componentWillMount = () => {
+  //   console.log('yesyes');
+  // }
 
   /**
    * 初步装载绘制工具集
@@ -85,33 +107,6 @@ export default class ColorCircle {
   initWebgl = () => {
     // 设置绘制窗口四个位置
     this.gl.viewport(0, 0, this.viewWidth, this.viewHeight);
-    // 顶点着色器
-    const VSHADER_SOURCE =
-      'attribute vec4 a_Position;\n' +
-      'uniform mat4 u_MvpMatrix;\n' +
-      'varying vec4 v_Color;\n' +
-      hslToRgba +
-      'void main() {\n' +
-      ' gl_Position = u_MvpMatrix * a_Position;\n' +
-      ' vec3 start_Position = vec3(1.0, 0.0, 0.0);\n' +
-      ' vec3 center_Position = vec3(0.0, 0.0, 0.0);\n' +
-      ' vec3 end_Position = vec3(a_Position);\n' +
-      ' float l_Start = distance(start_Position, center_Position);\n' +
-      ' float l_End = distance(end_Position, center_Position);\n' +
-      ' float _cos = dot(start_Position, end_Position) / l_Start / l_End;\n' +
-      ' float _angle = degrees(acos(_cos));\n' +
-      ' if(a_Position.y < 0.0) {\n' +
-      '   _angle = 360.0 - _angle;\n' +
-      ' }\n' +
-      ' v_Color = vec4(hslToRgba((_angle / 360.0), 0.8, 0.5), 1.0);\n' +
-      '}\n';
-    // 片元着色器
-    const FSHADER_SOURCE =
-      'precision mediump float;\n' +
-      'varying vec4 v_Color;\n' +
-      'void main() {\n' +
-      ' gl_FragColor = v_Color;\n' +
-      '}\n';
     if (!initShaders(this.gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
       console.log('Failed to init shaders');
       return;
@@ -138,8 +133,6 @@ export default class ColorCircle {
     this.mvpMatrix = mvpMatrix;
     this.viewProjMatrix = viewProjMatrix;
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.loading = false;
     this.requestToDraw();
@@ -151,7 +144,6 @@ export default class ColorCircle {
   initVertexBuffers = () => {
     const vertexData = createVertexByGroupPoint(this.fan, this.internalRadius, this.outerRadius);
     const { vertex, index } = vertexData;
-    console.log(vertexData);
     const vertices = new Float32Array(vertex);
     const indices = new Uint16Array(index);
     const indexBuffer = this.gl.createBuffer();
@@ -208,6 +200,7 @@ export default class ColorCircle {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.animate();
     this.gl.drawElements(this.gl.TRIANGLES, this.current, this.gl.UNSIGNED_SHORT, 0);
+    // console.log(this);
     this.frameRequest = requestAnimationFrame(this.draw);
   }
 

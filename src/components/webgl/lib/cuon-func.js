@@ -38,3 +38,30 @@ export function loadWebGLConfig(config) {
     stencil,
   };
 }
+
+/**
+ * 检测dom是否为元素
+ * @param {Element} dom 节点
+ * @returns {Boolean} true:是元素，false:不是元素
+ * @version 0.1.0
+ */
+export function isElement(dom) {
+  if (dom && dom.nodeType === 1) {
+    if (window.Node && (dom instanceof Node)) {
+      return true;
+    } else {
+      const test = document.createElement('div');
+      // 检验是否具备元素操作机制
+      // 一定程度上过滤对象
+      try {
+        test.appendChild(dom);
+        test.removeChild(dom);
+      } catch (error) {
+        return false;
+      }
+      return true;
+    }
+  } else {
+    return false;
+  }
+}

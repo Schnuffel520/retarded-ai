@@ -75,4 +75,22 @@ function loadShader(gl, type, source) {
   return shader;
 }
 
-export { initShaders, createProgram };
+function initArrayBuffer(gl, arrayData, arrayName, type, n) {
+  const arrayBuffer = gl.createBuffer();
+  if (!arrayBuffer) {
+    console.log(`${arrayName} is miss:arraybuffer`);
+    return -1;
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, arrayData, gl.STATIC_DRAW);
+  const a_attribute = gl.getAttribLocation(gl.program, arrayName);
+  if (a_attribute < 0) {
+    console.log(`${arrayName} is miss:a_attribute`);
+    return -1;
+  }
+  gl.vertexAttribPointer(a_attribute, n, type, false, 0, 0);
+  gl.enableVertexAttribArray(a_attribute);
+  return true;
+}
+
+export { initShaders, createProgram, initArrayBuffer };

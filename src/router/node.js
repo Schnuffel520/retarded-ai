@@ -12,7 +12,7 @@ export const nodes = [
       {
         path: '/login',
         label: '登录',
-        component: () => import('@/views/dashboard/login'),
+        component: () => import('@/views/login'),
       },
     ],
   },

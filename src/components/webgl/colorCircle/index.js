@@ -26,7 +26,7 @@ export default class ColorCircle extends WebGL {
     // 计算生成的模型顶点索引数目
     this.n = 0;
     // 扇叶数目
-    this.fan = 200;
+    this.fan = 300;
     // 内半径
     this.internalRadius = 0.5;
     // 外半径
@@ -199,9 +199,9 @@ export default class ColorCircle extends WebGL {
   draw = () => {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.animate();
-    this.gl.drawElements(this.gl.TRIANGLES, this.current, this.gl.UNSIGNED_SHORT, 0);
+    this.gl.drawElements(this.gl.TRIANGLES, this.n, this.gl.UNSIGNED_SHORT, 0);
     // console.log(this);
-    this.frameRequest = requestAnimationFrame(this.draw);
+    // this.frameRequest = requestAnimationFrame(this.draw);
   }
 
   animate = () => {

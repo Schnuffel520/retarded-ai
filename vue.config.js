@@ -2,13 +2,11 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      // template: 'public/index.html',
-      // filename: 'index.html',
-      title: '智障AI',
-      // chunks: ['chunk-vendors', 'chunk-common', 'index'],
+      title: '偷电狂魔爱酱',
     },
   },
   devServer: {
     open: true,
+    hotOnly: false,
   },
 };

@@ -1,5 +1,4 @@
 import { loadWebGLConfig, isElement } from './cuon-func';
-
 /**
  * WebGL类，基本的绘制类
  */
@@ -8,9 +7,11 @@ export default class WebGL {
     this.WEBGL_CONTEXT_CONFIG = loadWebGLConfig(config);
     this.dom = undefined;
     this.canvas = undefined;
+    this.drawWidth = 0;
+    this.drawHeight = 0;
     this.gl = undefined;
-    this.options = {};
-    this.create(dom);
+    this.options = { ...options };
+    // this.create(dom);
   }
 
   create = (dom) => {
@@ -20,13 +21,14 @@ export default class WebGL {
       try {
         this.createCanvas();
         this.linkCanvas();
-        this.createWebGLContext();
+        this.getWebGLContext();
         this.resetViewport();
         this.registerShaderProgram();
         this.loadModel();
         this.getLocationUniformAndAttribute();
         this.render();
       } catch (error) {
+        console.log(error);
         throw new Error('Faile to init WebGL ' + error);
       }
     } else {
@@ -47,7 +49,7 @@ export default class WebGL {
     this.resizeCanvas();
   }
 
-  createWebGLContext = () => {
+  getWebGLContext = () => {
     const gl = this.canvas.getContext('webgl', { ...this.WEBGL_CONTEXT_CONFIG }) || this.canvas.getContext('experimental-webgl', { ...this.WEBGL_CONTEXT_CONFIG });
     if (!gl) {
       throw new Error('Failed to get the WebGLContextRendering');
@@ -77,6 +79,8 @@ export default class WebGL {
 
   resetViewport = () => {
     const boundRect = this.dom.getBoundingClientRect();
+    this.drawWidth = boundRect.width;
+    this.drawHeight = boundRect.height;
     // 设置绘制视窗
     this.gl.viewport(0, 0, boundRect.width, boundRect.height);
   }

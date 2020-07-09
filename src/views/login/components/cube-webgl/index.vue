@@ -21,7 +21,7 @@ export default {
       if (!this.chart) {
         const dom = this.$refs.webgl;
         this.chart = new CubeRuins(dom, this.options);
-        console.log(this.chart);
+        // console.log(this.chart);
       }
     },
   },
@@ -30,7 +30,8 @@ export default {
 
 <style lang="less" scoped>
 .cube-webgl-warpper {
-  width: 300px;
-  height: 200px;
+  position: relative;
+  // width: 300px;
+  // height: 200px;
 }
 </style>

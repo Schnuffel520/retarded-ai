@@ -1,17 +1,14 @@
-import { loadWebGLConfig, isElement } from './cuon-func';
-/**
- * WebGL类，基本的绘制类
- */
-export default class WebGL {
+import { loadCanvas2dConfig, isElement } from './cuon-func';
+
+export default class Canvas2d {
   constructor(dom, options, config) {
-    this.WEBGL_CONTEXT_CONFIG = loadWebGLConfig(config);
+    this.CANVAS2D_CONTEXT_CONFIG = loadCanvas2dConfig(config);
     this.dom = undefined;
     this.canvas = undefined;
     this.drawWidth = 0;
     this.drawHeight = 0;
-    this.gl = undefined;
+    this.context = undefined;
     this.options = { ...options };
-    // this.create(dom);
   }
 
   create = (dom) => {
@@ -21,15 +18,10 @@ export default class WebGL {
       try {
         this.createCanvas();
         this.linkCanvas();
-        this.getWebGLContext();
-        this.resetViewport();
-        this.registerShaderProgram();
-        this.loadModel();
-        this.getLocationUniformAndAttribute();
+        this.getCanvas2dContext();
         this.render();
       } catch (error) {
-        // console.log(error);
-        throw new Error('Faile to init WebGL ' + error);
+        throw new Error('Faile to init Canvas2dRenderingContext ' + error);
       }
     } else {
       throw new Error('Expected Element, got ' + typeof dom);
@@ -49,17 +41,6 @@ export default class WebGL {
     this.resizeCanvas();
   }
 
-  getWebGLContext = () => {
-    const gl = this.canvas.getContext('webgl', { ...this.WEBGL_CONTEXT_CONFIG }) || this.canvas.getContext('experimental-webgl', { ...this.WEBGL_CONTEXT_CONFIG });
-    if (!gl) {
-      throw new Error('Failed to get the WebGLContextRendering');
-    } else {
-      this.gl = gl;
-    }
-  }
-
-  getLocationUniformAndAttribute = () => { }
-
   linkCanvas = () => {
     // 先清空挂载节点下的所有孩子节点，保持挂载环境清洁，保证渲染前仅挂载一个节点。
     const child = this.dom.childNodes || [];
@@ -71,20 +52,6 @@ export default class WebGL {
     this.dom.appendChild(this.canvas);
   }
 
-  loadModel = () => { }
-
-  registerShaderProgram = () => { }
-
-  render = () => { }
-
-  resetViewport = () => {
-    const boundRect = this.dom.getBoundingClientRect();
-    this.drawWidth = boundRect.width;
-    this.drawHeight = boundRect.height;
-    // 设置绘制视窗
-    this.gl.viewport(0, 0, boundRect.width, boundRect.height);
-  }
-
   resizeCanvas = () => {
     // 获取dom的基本信息
     const boundRect = this.dom.getBoundingClientRect();
@@ -92,8 +59,15 @@ export default class WebGL {
     this.canvas.height = boundRect.height;
   }
 
-  resize = () => {
-    this.resizeCanvas();
-    this.resetViewport();
+  getCanvas2dContext = () => {
+    const context = this.canvas.getContext('2d', { ...this.CANVAS2D_CONTEXT_CONFIG });
+    if (!context) {
+      throw new Error('Failed to get the Canvas2dRenderingContext');
+    } else {
+      this.context = context;
+    }
   }
+
+  render = () => { }
+
 }

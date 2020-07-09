@@ -40,6 +40,23 @@ export function loadWebGLConfig(config) {
 }
 
 /**
+ * canvas2d-context的上下文属性
+ * @param {Object} config 用户设置的属性集合
+ * @returns {Object} 组合后的上下文属性
+ * @author schnuffel
+ * @version 0.1.0
+ */
+export function loadCanvas2dConfig(config) {
+  const {
+    // [boolean]值表明canvas包含一个alpha通道. 如果设置为false, 浏览器将认为canvas背景总是不透明的, 这样可以加速绘制透明的内容和图片
+    alpha = true,
+  } = config || {};
+  return {
+    alpha,
+  };
+}
+
+/**
  * 检测dom是否为元素
  * @param {Element} dom 节点
  * @returns {Boolean} true:是元素，false:不是元素

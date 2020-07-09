@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     login() {
-      console.log('test');
+      this.$router.push({ path: '/webgl' });
     },
   },
   components: {

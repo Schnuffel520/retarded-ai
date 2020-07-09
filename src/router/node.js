@@ -21,13 +21,18 @@ export const nodes = [
     label: 'WebGL',
     component: BasicLayout,
     redirect: {
-      path: '/webgl/color_circle',
+      path: '/webgl/complex_circle',
     },
     children: [
       {
         path: '/webgl/color_circle',
         label: '彩环',
         component: () => import('@/views/webgl/colorCircle'),
+      },
+      {
+        path: '/webgl/complex_circle',
+        label: '复变环',
+        component: () => import('@/views/webgl/complexCircle'),
       },
     ],
   },

@@ -1,12 +1,18 @@
 <template>
-  <div class="complex-circle-warpper">2</div>
+  <div class="complex-circle-warpper">
+    <CircleCard></CircleCard>
+  </div>
 </template>
 
 <script>
+import { CircleCard } from './components';
 export default {
   name: 'complex-circle',
   data() {
     return {};
+  },
+  components: {
+    CircleCard,
   },
 };
 </script>

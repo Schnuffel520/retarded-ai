@@ -55,6 +55,7 @@ export default class Canvas2d {
   resizeCanvas = () => {
     // 获取dom的基本信息
     const boundRect = this.dom.getBoundingClientRect();
+    // console.log(boundRect);
     this.canvas.width = boundRect.width;
     this.canvas.height = boundRect.height;
   }
@@ -69,5 +70,4 @@ export default class Canvas2d {
   }
 
   render = () => { }
-
 }

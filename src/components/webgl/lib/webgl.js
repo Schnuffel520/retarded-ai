@@ -11,7 +11,6 @@ export default class WebGL {
     this.drawHeight = 0;
     this.gl = undefined;
     this.options = { ...options };
-    // this.create(dom);
   }
 
   create = (dom) => {
@@ -28,7 +27,6 @@ export default class WebGL {
         this.getLocationUniformAndAttribute();
         this.render();
       } catch (error) {
-        // console.log(error);
         throw new Error('Faile to init WebGL ' + error);
       }
     } else {
@@ -49,17 +47,6 @@ export default class WebGL {
     this.resizeCanvas();
   }
 
-  getWebGLContext = () => {
-    const gl = this.canvas.getContext('webgl', { ...this.WEBGL_CONTEXT_CONFIG }) || this.canvas.getContext('experimental-webgl', { ...this.WEBGL_CONTEXT_CONFIG });
-    if (!gl) {
-      throw new Error('Failed to get the WebGLContextRendering');
-    } else {
-      this.gl = gl;
-    }
-  }
-
-  getLocationUniformAndAttribute = () => { }
-
   linkCanvas = () => {
     // 先清空挂载节点下的所有孩子节点，保持挂载环境清洁，保证渲染前仅挂载一个节点。
     const child = this.dom.childNodes || [];
@@ -71,11 +58,14 @@ export default class WebGL {
     this.dom.appendChild(this.canvas);
   }
 
-  loadModel = () => { }
-
-  registerShaderProgram = () => { }
-
-  render = () => { }
+  getWebGLContext = () => {
+    const gl = this.canvas.getContext('webgl', { ...this.WEBGL_CONTEXT_CONFIG }) || this.canvas.getContext('experimental-webgl', { ...this.WEBGL_CONTEXT_CONFIG });
+    if (!gl) {
+      throw new Error('Failed to get the WebGLContextRendering');
+    } else {
+      this.gl = gl;
+    }
+  }
 
   resetViewport = () => {
     const boundRect = this.dom.getBoundingClientRect();
@@ -84,6 +74,14 @@ export default class WebGL {
     // 设置绘制视窗
     this.gl.viewport(0, 0, boundRect.width, boundRect.height);
   }
+
+  registerShaderProgram = () => { }
+
+  loadModel = () => { }
+
+  getLocationUniformAndAttribute = () => { }
+
+  render = () => { }
 
   resizeCanvas = () => {
     // 获取dom的基本信息
@@ -96,4 +94,17 @@ export default class WebGL {
     this.resizeCanvas();
     this.resetViewport();
   }
+
+  destory = () => {
+    this.stopRequest();
+    if (this.gl) {
+      this.gl.getExtension('WEBGL_lose_context').loseContext();
+      this.gl = undefined;
+    }
+    this.dom.removeChild(this.canvas);
+    this.canvas = undefined;
+    this.dom = undefined;
+  };
+
+  stopRequest = () => { }
 }

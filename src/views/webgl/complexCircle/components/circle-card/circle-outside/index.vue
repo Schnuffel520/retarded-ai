@@ -39,7 +39,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: row;
-  background-color: #0c151c;
+  background-color: transparent;
   animation: scale-x 0.35s ease-out;
   .outside-right,
   .outside-left {

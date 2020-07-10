@@ -1,11 +1,13 @@
 <template>
   <div class="circle-card-warpper">
     <CircleOutside></CircleOutside>
+    <CircleMiddle></CircleMiddle>
   </div>
 </template>
 
 <script>
 import CircleOutside from './circle-outside';
+import CircleMiddle from './circle-middle';
 export default {
   name: 'circle-card',
   data() {
@@ -13,6 +15,7 @@ export default {
   },
   components: {
     CircleOutside,
+    CircleMiddle,
   },
 };
 </script>
@@ -23,6 +26,8 @@ export default {
   margin: 80px;
   width: 1186px;
   height: 720px;
-  // background-color: black;
+  // box-sizing: 0;
+  // display: table;
+  background-color: #141c26;
 }
 </style>
